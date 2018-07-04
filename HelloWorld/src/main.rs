@@ -1,5 +1,5 @@
 // println!(...) はマクロを呼び出している
-// "Hello, world!" は静的に確保されたt文字列
+// "Hello, world!" は静的に確保された文字列
 
 fn main() {
 	println!("Hello, world!");
