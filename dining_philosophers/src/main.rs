@@ -34,6 +34,27 @@
  * これを解決するプログラムを作成する
  */
 
+
+// 哲学者を表す構造体を定義する
+// &str (データを参照する型) ではなく String (データを所有する型)
+struct Philosopher {
+    name: String,
+}
+
+// Philosopher 構造体に対する定義を与える
+// ここでは new という関連関数を定義する
+impl Philosopher {
+    fn new(name: &str) -> Philosopher {
+        Philosopher {
+            name: name.to_string(),
+        }
+    }
+}
+
 fn main() {
-    println!("Hello, world!");
+    let p1 = Philosopher::new("Judith Butler");
+    let p2 = Philosopher::new("Gilles Deleuze");
+    let p3 = Philosopher::new("Karl Marx");
+    let p4 = Philosopher::new("Emma Goldman");
+    let p5 = Philosopher::new("Michel Foucault");
 }
