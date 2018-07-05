@@ -27,8 +27,11 @@ fn main() {
         // すでに定義してある guess を新しい定義で隠す ( シャドーイング )
         // 文字列の trim メソッドは、文字列の最初と最後にある空白を取り除く
         // 文字列の parse メソッドは、文字列を何かの数値へとパースする
-        let guess: u32 = guess.trim().parse()
-            .expect("Please type a number");
+        // parse() の戻り値は enum で、追加情報もある ( ここでは num )
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
     
         println!("You guessed: {}", guess);
 
