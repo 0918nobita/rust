@@ -48,12 +48,23 @@ impl Philosopher {
             name: name.to_string(),
         }
     }
+
+    // &self を取るので、関連関数ではなくメソッドとなる
+    fn eat(&self) {
+        println!("{} is done eating.", self.name);
+    }
 }
 
 fn main() {
-    let p1 = Philosopher { name: "Judith Butler".to_string() };
-    let p2 = Philosopher::new("Gilles Deleuze");
-    let p3 = Philosopher::new("Karl Marx");
-    let p4 = Philosopher::new("Emma Goldman");
-    let p5 = Philosopher::new("Michel Foucault");
+    let philosophers = vec![
+        Philosopher::new("Judith Butler"),
+        Philosopher::new("Gilles Deleuze"),
+        Philosopher::new("Karl Marx"),
+        Philosopher::new("Emma Goldman"),
+        Philosopher::new("Michel Foucault"),
+    ];
+
+    for p in &philosophers {
+        p.eat();
+    }
 }
