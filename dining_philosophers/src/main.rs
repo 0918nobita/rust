@@ -34,6 +34,9 @@
  * これを解決するプログラムを作成する
  */
 
+use std::thread;
+use std::time::Duration;
+
 // 哲学者を表す構造体を定義する
 // &str (データを参照する型) ではなく String (データを所有する型)
 struct Philosopher {
@@ -51,7 +54,11 @@ impl Philosopher {
 
     // &self を取るので、関連関数ではなくメソッドとなる
     fn eat(&self) {
-        println!("{} is done eating.", self.name);
+        println!("{} is eating.", self.name);
+
+        thread::sleep(Duration::from_millis(1000));
+
+        println!("{} is done eating", self.name);
     }
 }
 
