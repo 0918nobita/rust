@@ -71,7 +71,19 @@ fn main() {
         Philosopher::new("Michel Foucault"),
     ];
 
-    for p in &philosophers {
-        p.eat();
+    // Vec<_> の _ は型プレースホルダ (型推論させる)
+    // into_iter() 哲学者の所有権を持つイテレータを生成する
+    // map の引数: 要素ごとに呼び出されるクロージャ
+    let handles: Vec<_> = philosophers.into_iter().map(|p| {
+        // thread::spawn 新しいスレッド上で、渡されたクロージャを実行する
+        // move クロージャに付与する「アノテーション」
+        //      キャプシャする値の所有権がクロージャ内へと移動される
+        thread::spawn(move || {
+            p.eat();
+        })
+    }).collect();
+
+    for h in handles {
+        h.join().unwrap();
     }
 }
