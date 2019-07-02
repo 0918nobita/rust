@@ -6,7 +6,9 @@ fn main() {
 }
 
 fn rpn(exp: &str) -> f64 {
+  // stack は mutable
   let mut stack = Vec::new();
+  // exp.split_whitespace() はメソッド呼び出し構文
   // split_whitespace はイテレータを返す
   for token in exp.split_whitespace() {
     if let Ok(num) = token.parse::<f64>() {
