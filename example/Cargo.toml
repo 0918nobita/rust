@@ -1,0 +1,7 @@
+[package]
+name = "example"
+version = "0.1.0"
+authors = ["0918nobita <nobita.0918@gmail.com>"]
+edition = "2018"
+
+[dependencies]
