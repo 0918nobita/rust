@@ -33,7 +33,7 @@ fn main() {
     let foo = Foo { x };
     println!("x is: {}", foo.x()); // => "x is: 5"
 
-    module_a::func(); // => "module_a"
+    module_a::func();
 }
 
 fn calc_len(s: &String) -> usize {
