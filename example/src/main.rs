@@ -1,7 +1,15 @@
+struct Foo<'a> {
+    x: &'a i32,
+}
+
+impl<'a> Foo<'a> {
+    fn x(&self) -> &'a i32 { self.x }
+}
+
 fn main() {
     let mut s1 = String::from("hello");
     let len = calc_len(&s1);
-    println!("len:   {}", len);
+    println!("len  : {}", len);
     append_str(&mut s1);
     println!("after: {}", s1);
 
@@ -14,6 +22,14 @@ fn main() {
     s2.push_str("Modified");
     println!("s2  (after): {}", s2);
     // println!("{}", s2w); // <1>
+
+    let mut s3 = String::from("Rust");
+    with_exclamation(&mut s3);
+    println!("s3: {}", s3); // => "Rust!"
+
+    let x = &5;
+    let foo = Foo { x };
+    println!("x is: {}", foo.x()); // => "x is: 5"
 }
 
 fn calc_len(s: &String) -> usize {
@@ -24,6 +40,7 @@ fn append_str(s: &mut String) {
     s.push_str(", world!")
 }
 
+// 文字列スライスの使用例
 fn first_word(s: &String) -> &str {
     let bytes = s.as_bytes();
 
@@ -34,4 +51,9 @@ fn first_word(s: &String) -> &str {
     }
 
     &s[..]
+}
+
+// ライフタイムパラメータを省略しない場合
+fn with_exclamation<'a>(s: &'a mut String) {
+    s.push_str("!")
 }
