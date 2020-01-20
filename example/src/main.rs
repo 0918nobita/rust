@@ -1,3 +1,5 @@
+mod module_a;
+
 struct Foo<'a> {
     x: &'a i32,
 }
@@ -30,6 +32,8 @@ fn main() {
     let x = &5;
     let foo = Foo { x };
     println!("x is: {}", foo.x()); // => "x is: 5"
+
+    module_a::func(); // => "module_a"
 }
 
 fn calc_len(s: &String) -> usize {
