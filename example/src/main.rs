@@ -1,9 +1,19 @@
 fn main() {
     let mut s1 = String::from("hello");
     let len = calc_len(&s1);
-    println!("len: {}", len);
+    println!("len:   {}", len);
     append_str(&mut s1);
-    println!("after: {}", s1)
+    println!("after: {}", s1);
+
+    let mut s2 = String::from("Rust tutorial");
+    // <1> 行のコメント化を解除すると、s2.clear() で可変借用に失敗する
+    // s2w という不変参照がまだ生きているため
+    let s2w = first_word(&s2);
+    println!("s2 (before): {}", s2w);
+    s2.clear();
+    s2.push_str("Modified");
+    println!("s2  (after): {}", s2);
+    // println!("{}", s2w); // <1>
 }
 
 fn calc_len(s: &String) -> usize {
@@ -12,4 +22,16 @@ fn calc_len(s: &String) -> usize {
 
 fn append_str(s: &mut String) {
     s.push_str(", world!")
+}
+
+fn first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i]
+        }
+    }
+
+    &s[..]
 }
