@@ -4,6 +4,9 @@ use std::time::Duration;
 mod cacher;
 use cacher::Cacher;
 
+#[cfg(test)]
+mod test;
+
 pub fn generate_workout(intensity: u32, random_number: u32) {
     let mut expensive_result = Cacher::new(|num| {
         println!("calculating slowly...");

@@ -1,9 +1,11 @@
+use std::collections::HashMap;
+
 pub struct Cacher<T>
 where
     T: Fn(u32) -> u32,
 {
     calculation: T,
-    value: Option<u32>,
+    value: HashMap<u32, u32>,
 }
 
 impl<T> Cacher<T>
@@ -13,15 +15,17 @@ where
     pub fn new(calculation: T) -> Cacher<T> {
         Cacher {
             calculation,
-            value: None,
+            value: HashMap::new(),
         }
     }
 
     pub fn value(&mut self, arg: u32) -> u32 {
-        self.value.unwrap_or_else(|| {
+        if let Some(v) = self.value.get(&arg) {
+            v.clone()
+        } else {
             let v = (self.calculation)(arg);
-            self.value = Some(v);
-            v
-        })
+            self.value.insert(arg, v);
+            v.clone()
+        }
     }
 }
