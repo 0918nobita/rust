@@ -100,3 +100,16 @@ where
 {
     f(arg)
 }
+
+macro_rules! count {
+    () => (0usize);
+    ( $x:tt $($xs:tt)* ) => (1usize + count!($($xs)*));
+}
+
+#[test]
+fn use_macro() {
+    assert!(count!() == 0);
+    assert!(count!(,) == 1);
+    assert!(count!(,,) == 2);
+    assert!(count!(,,,) == 3);
+}
