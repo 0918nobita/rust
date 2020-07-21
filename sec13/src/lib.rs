@@ -4,6 +4,9 @@ use std::time::Duration;
 mod cacher;
 use cacher::Cacher;
 
+#[macro_use]
+mod macros;
+
 #[cfg(test)]
 mod test;
 
