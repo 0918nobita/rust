@@ -113,3 +113,16 @@ fn use_macro() {
     assert!(count!(,,) == 2);
     assert!(count!(,,,) == 3);
 }
+
+macro_rules! count_args {
+    () => (0usize);
+    ( $x:expr ) => (1usize);
+    ( $x:expr , $($xs:expr),* ) => (1usize + count_args!($($xs),*));
+}
+
+#[test]
+fn use_count_args_macro() {
+    assert!(count_args!() == 0);
+    assert!(count_args!(1) == 1);
+    assert!(count_args!(1, 2, 3, 4, 5) == 5);
+}
