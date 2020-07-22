@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 #[derive(Debug)]
-pub enum ListRc {
-    Cons(i32, Rc<ListRc>),
+pub enum ListRc<T> {
+    Cons(T, Rc<ListRc<T>>),
     Nil,
 }
 
