@@ -1,11 +1,11 @@
-pub mod list;
+mod list;
 
 pub mod mybox;
 
 #[macro_use]
 pub mod list_rc;
 
-pub mod list_mut;
+mod list_mut;
 
 #[cfg(test)]
 mod test {

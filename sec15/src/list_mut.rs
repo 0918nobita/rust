@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::fmt;
 use std::rc::Rc;
 
-pub enum ListMut<T: fmt::Debug> {
+pub enum ListMut<T> {
     Cons(Rc<RefCell<T>>, Rc<ListMut<T>>),
     Nil,
 }
@@ -23,12 +23,45 @@ where
     }
 }
 
+pub struct ListMutIterator<'a, T> {
+    list: &'a ListMut<T>,
+}
+
+impl<'a, T> Iterator for ListMutIterator<'a, T>
+where
+    T: Clone,
+{
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.list {
+            ListMut::Cons(car_ref, cdr) => {
+                let car = Some(car_ref.borrow().clone());
+                self.list = cdr;
+                car
+            }
+            ListMut::Nil => None,
+        }
+    }
+}
+
+impl<'a, T> IntoIterator for &'a ListMut<T>
+where
+    T: Clone,
+{
+    type Item = T;
+    type IntoIter = ListMutIterator<'a, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        ListMutIterator { list: self }
+    }
+}
+
 #[cfg(test)]
 mod test {
     #[test]
     fn list_mut() -> Result<(), Box<dyn std::error::Error>> {
         use super::ListMut::{Cons, Nil};
-        use indoc::indoc;
         use std::cell::RefCell;
         use std::io::Write;
         use std::rc::Rc;
@@ -41,22 +74,12 @@ mod test {
         *value.borrow_mut() += 10;
 
         let mut buf = Vec::<u8>::new();
-        writeln!(&mut buf, "a after = {:?}", a)?;
-        writeln!(&mut buf, "b after = {:?}", b)?;
-        writeln!(&mut buf, "c after = {:?}", c)?;
-
+        write!(&mut buf, "b after = {:?}", b)?;
         let output = String::from_utf8(buf)?;
-        assert_eq!(
-            output,
-            indoc!(
-                "
-                a after = Cons(15, Nil)
-                b after = Cons(6, Cons(15, Nil))
-                c after = Cons(10, Cons(15, Nil))
-            "
-            )
-        );
+        assert_eq!(output, "b after = Cons(6, Cons(15, Nil))");
 
+        let vec: Vec<i32> = c.into_iter().collect();
+        assert_eq!(vec, vec![10, 15]);
         Ok(())
     }
 }
