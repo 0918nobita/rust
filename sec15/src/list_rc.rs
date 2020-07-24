@@ -46,6 +46,28 @@ where
     }
 }
 
+pub fn ref_count() {
+    use ListRc::Cons;
+
+    let a = list_rc![5, 10];
+    println!("a: {:?}", a);
+    println!("Ref count: {}", Rc::strong_count(&a));
+
+    #[allow(unused_variables)]
+    let b = Cons(3, Rc::clone(&a));
+    println!("b: {:?}", b);
+    println!("Ref count: {}", Rc::strong_count(&a));
+
+    {
+        #[allow(unused_variables)]
+        let c = Cons(4, Rc::clone(&a));
+        println!("c: {:?}", c);
+        println!("Ref count: {}", Rc::strong_count(&a));
+    }
+
+    println!("Ref count: {}", Rc::strong_count(&a));
+}
+
 #[cfg(test)]
 mod test {
     use super::{ListRc, ListRcIterator};
