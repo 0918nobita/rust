@@ -1,7 +1,8 @@
 use std::rc::Rc;
 
 #[derive(Debug)]
-pub enum ListRc<T> {
+#[allow(dead_code)]
+enum ListRc<T> {
     Cons(T, Rc<ListRc<T>>),
     Nil,
 }
@@ -12,7 +13,7 @@ macro_rules! list_rc {
     ( $x:expr $(, $xs:expr)* ) => (std::rc::Rc::new(ListRc::Cons($x, list_rc!($($xs),*))));
 }
 
-pub struct ListRcIterator<'a, T> {
+struct ListRcIterator<'a, T> {
     list: &'a ListRc<T>,
 }
 
@@ -46,31 +47,13 @@ where
     }
 }
 
-pub fn ref_count() {
-    use ListRc::Cons;
-
-    let a = list_rc![5, 10];
-    println!("a: {:?}", a);
-    println!("Ref count: {}", Rc::strong_count(&a));
-
-    #[allow(unused_variables)]
-    let b = Cons(3, Rc::clone(&a));
-    println!("b: {:?}", b);
-    println!("Ref count: {}", Rc::strong_count(&a));
-
-    {
-        #[allow(unused_variables)]
-        let c = Cons(4, Rc::clone(&a));
-        println!("c: {:?}", c);
-        println!("Ref count: {}", Rc::strong_count(&a));
-    }
-
-    println!("Ref count: {}", Rc::strong_count(&a));
-}
-
 #[cfg(test)]
 mod test {
-    use super::{ListRc, ListRcIterator};
+    use super::{
+        ListRc::{self, Cons},
+        ListRcIterator,
+    };
+    use std::rc::Rc;
 
     #[test]
     fn list_rc_iter() {
@@ -93,5 +76,26 @@ mod test {
         let list = list_rc![4, 5, 6];
         let vec: Vec<i32> = list.into_iter().collect();
         assert_eq!(vec, vec![4, 5, 6]);
+    }
+
+    #[test]
+    fn ref_count() {
+        let a = list_rc![5, 10];
+        assert_eq!(format!("{:?}", a), "Cons(5, Cons(10, Nil))");
+        assert_eq!(Rc::strong_count(&a), 1);
+
+        #[allow(unused_variables)]
+        let b = Cons(3, Rc::clone(&a));
+        assert_eq!(format!("{:?}", b), "Cons(3, Cons(5, Cons(10, Nil)))");
+        assert_eq!(Rc::strong_count(&a), 2);
+
+        {
+            #[allow(unused_variables)]
+            let c = Cons(4, Rc::clone(&a));
+            assert_eq!(format!("{:?}", c), "Cons(4, Cons(5, Cons(10, Nil)))");
+            assert_eq!(Rc::strong_count(&a), 3);
+        }
+
+        assert_eq!(Rc::strong_count(&a), 2);
     }
 }
