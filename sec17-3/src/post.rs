@@ -1,4 +1,4 @@
-use crate::state::{State, Draft};
+use crate::state::{Draft, State};
 
 pub struct Post {
     state: Option<Box<dyn State>>,
