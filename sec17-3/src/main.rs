@@ -1,5 +1,5 @@
 extern crate sec17_3;
-use sec17_3::Post;
+use sec17_3::post::Post;
 
 fn main() {
     let mut post = Post::new();
